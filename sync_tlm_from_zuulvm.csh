@@ -11,7 +11,7 @@ else
   source setup_exis_quicklook_lasp.csh
 endif
 
-set tlmdir = /Volumes/home/exissdp/Downloads/latest_exis_tlm
+set tlmdir = /Volumes/home/exissdp/Downloads/latest_exis_tlm/
 
 # loop forever
 while ( 1 )
