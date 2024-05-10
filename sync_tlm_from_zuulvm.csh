@@ -23,7 +23,7 @@ while ( 1 )
 	exit 1
     endif
 
-    rsync -av ${tlmdir}"OR_EXIS-L0_G${scnum}_s*nc" ${existmpdir}
+    rsync -tv ${tlmdir}"OR_EXIS-L0_G${scnum}_s*nc" ${existmpdir}
 
 
     # recall quicklook reads the nc file directly withthe /LCR switch
