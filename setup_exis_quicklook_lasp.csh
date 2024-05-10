@@ -25,9 +25,11 @@ setenv exis_type "fm3"
 # allow command line override of environment type
 if ( ${#argv} != 0 ) setenv exis_type `echo ${argv[1]} | tr '[FM]' '[fm]'`
 
-# define temporary filename for transfers from the two-day store
-setenv existmpdir /Users/exis_quicklook/tmpdata/
+# define temporary dir and filename
+setenv existmpdir ${HOME}/tmpdata/
 setenv existmpfilename ${existmpdir}`whoami`_exis_${exis_type}_tmp_tlmfile
+
+if ( ! -e ${existmpdir} ) mkdir ${existmpdir} # create it if needed
 
 if ( ${exis_type} == "fm1" ) setenv scnum 16
 if ( ${exis_type} == "fm2" ) setenv scnum 17
@@ -65,7 +67,5 @@ setenv IDL_PATH "<IDL_DEFAULT>:+."
 
 unalias cd
 set prompt = "%S%s%B%UEXIS_${exis_type}>%u%b "
-
-#if (-e code) cd code
 
 exit 0
