@@ -11,59 +11,31 @@ else
   source setup_exis_quicklook_lasp.csh
 endif
 
-
-# G16,17,18 are all the same format
-set satstr = "geoproducts-ops/op/GOES-"$scnum
-
-# G19 is different
-if ( ${exis_type} == "fm4" ) set satstr = "geoproducts-plt/plt/GOES-19"
-
+set tlmdir = /Volumes/home/exissdp/Downloads/latest_exis_tlm
 
 # loop forever
 while ( 1 )
 
-    echo "rsync from exissdp via /Volumes/home/"
+    echo "rsync from exissdp via $tlmdir"
 
-    if ( ! -d /Volumes/home/exissdp/Downloads/latest_exis_tlm ) then
+    if ( ! -d ${tlmdir} ) then
 	echo "ERROR: sync_tlm_from_zuulvm.csh - mount not found, Go->Connect to server and select home"
 	exit 1
     endif
 
-    rsync -av /Volumes/home/exissdp/Downloads/latest_exis_tlm/"?R_EXIS-L0_G${scnum}_s*.nc" ${existmpdir}
+    rsync -av ${tlmdir}"?R_EXIS-L0_G${scnum}_s*.nc" ${existmpdir}
 
-    # currentfile has no path
-    set currentfile=`aws s3 ls s3://${satstr}/l0/EXIS/${datestr}/ | grep nc | awk '{print $4}' | sort | tail -1`
 
-    echo "found ${currentfile}"
+    # recall quicklook reads the nc file directly withthe /LCR switch
 
-    # does the file not exist locally
-    if ( ! -e "${existmpdir}${currentfile}" ) then
+    # purge old files
+    purge_old_files:
+    set allncfiles = `find ${existmpdir} -name "OR_EXIS-L0_G${scnum}*" | sort`
+    set n_nc_files = ${#allncfiles}
 
-	# retrieve this one file, takes about 7 seconds
-	date
-	echo ""
-	echo "downloading $currentfile"
-
-	aws s3 cp "s3://${satstr}/l0/EXIS/${datestr}/${currentfile}" "${existmpdir}"
-	echo "file downloaded"
-	echo ""
-
-        # recall quicklook reads the nc file directly withthe /LCR switch
-
-	# purge old files
-	purge_old_files:
-	set allncfiles = `find ${existmpdir} -name "OR_EXIS-L0_G${scnum}*" | sort`
-	set n_nc_files = ${#allncfiles}
-	#echo "n_nc_files = $n_nc_files"
-
-	if ( $n_nc_files > 3 ) then
-	    rm $allncfiles[1]
-	    goto purge_old_files
-	endif
-    
-	date
-    else
-	echo "latest file already processed"
+    if ( $n_nc_files > 3 ) then
+	rm $allncfiles[1]
+	goto purge_old_files
     endif
 
     # sleep 10 seconds, repeat
