@@ -63,7 +63,7 @@ setenv exis_cal_data ${exis_root}/cal/${exis_type}
 setenv exis_code      ${exis_root}/code
 
 # enforce strictly limited paths
-setenv IDL_PATH "<IDL_DEFAULT>:+."
+setenv IDL_PATH "<IDL_DEFAULT>:+${PWD}"
 
 unalias cd
 set prompt = "%S%s%B%UEXIS_${exis_type}>%u%b "
