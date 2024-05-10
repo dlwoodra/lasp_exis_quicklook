@@ -5,10 +5,10 @@ if ( ${#argv} != 0 ) setenv exis_type `echo ${argv[1]} | tr '[FM]' '[fm]'`
 # retrieve constants for scnum, existmpfilename
 if ( ${?exis_type} == 1 ) then
   # if exis_type was provided, use it
-  source ~/exis/exis_quicklook_package_2021054/setup_exis_quicklook_lasp.csh ${exis_type}
+  source setup_exis_quicklook_lasp.csh ${exis_type}
 else
     # use default FM
-  source ~/exis/exis_quicklook_package_2021054/setup_exis_quicklook_lasp.csh
+  source setup_exis_quicklook_lasp.csh
 endif
 
 
